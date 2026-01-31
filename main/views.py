@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from .models import Category, Product
+from cart.forms import CartAddProductForm
 
 def product_list(request, category_slug=None): # По category slug прередаючи параметр можна фільтрувати
     categories = Category.objects.all()
@@ -16,5 +17,7 @@ def product_list(request, category_slug=None): # По category slug преред
 def product_detail(request, id, slug):
     product = get_object_or_404(Product, id=id, slug=slug)
     related_products = Product.objects.filter(category=product.category).exclude(id=product.id)[:4] # "Схожі", вибираємо продукти з тієї ж  категорії, окрім того що вже є по ід, і виводимо тільки 4 товара
-
-    return render(request, 'main/product/detail.html', {'product': product, 'related_products': related_products})
+    cart_product_form = CartAddProductForm()
+    return render(request, 'main/product/detail.html', {'product': product,
+                                                        'related_products': related_products,
+                                                        'cart_product_form': cart_product_form})

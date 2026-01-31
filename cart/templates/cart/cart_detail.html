@@ -1,0 +1,59 @@
+{% extends "main/base.html" %}
+
+{% block title %}
+Кошик
+{% endblock title %}
+
+{% block content %}
+<h1>Ваш кошик</h1>
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Товар</th>
+                <th>Кількість</th>
+                <th>Видалити</th>
+                <th>Ціна за одиницю</th>
+                <th>Загальна вартість</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in cart %}
+                <tr>
+                    <td>{{ item.product.name }}</td>
+                    <td>
+                        <form action="{% url 'cart:cart_add' item.product.id %}"  method="post">
+                            {% csrf_token %}
+                            {{ item.update_quantity_form.quantity }}
+                            {{ item.update_quantity_form.override }}
+                            <button type="submit" class="btn btn-sm btn-outline-secondary">Оновити</button>
+                        </form>
+                    </td>
+                    <td>
+                        <form action="{% url 'cart:cart_remove' item.product.id %}"  method="post">
+                            {% csrf_token %}
+                            <button type="submit"> <i class="bi bi-trash"></i></button>
+                        </form>
+                    </td>
+                    <td>{{ item.price }} $</td>
+                    <td>{{ item.total_price }} $</td>
+                </tr>
+                {% empty %}
+            <tr>
+                <td colspan="5"> Кошик пустий </td>
+            </tr>
+            {% endfor %}
+            {% if cart.get_total_price %}
+                <tr class="table-active">
+                    <td colspan="4"> Всього: </td>
+                    <td>{{ cart.get_total_price }} $</td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+    <div class="d-flex justify-content-between">
+        <a href="{% url 'main:product_list' %}" class="btn btn-outline-secondary"> Продовжити перегляд товарів... </a>
+        <a href="#" class="btn btn-primary">Оформити замовлення</a>
+    </div>
+</div>
+{% endblock content %}
