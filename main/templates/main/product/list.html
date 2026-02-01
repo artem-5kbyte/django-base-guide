@@ -5,45 +5,98 @@
 {% endblock title %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h1>{% if category %}{{ category.name }}{% else %} Всі товари {% endif %}</h1>
-    <div class="dropdown">
-        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" >
-            Сортування
-        </button>
-        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-            <li><a class="dropdown-item" href="?sort=name">За назвою(А-Я)</a></li>
-            <li><a class="dropdown-item" href="?sort=-name">За назвою(Я-А)</a></li>
-            <li><a class="dropdown-item" href="?sort=price">За ціною(Дешеві)</a></li>
-            <li><a class="dropdown-item" href="?sort=-price">За ціною(Дорожчі)</a></li>
 
+<!-- HEADER -->
+<div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+    <h1 class="fw-bold mb-0">
+        {% if category %}{{ category.name }}{% else %} Всі товари {% endif %}
+    </h1>
+
+    <div class="dropdown">
+        <button class="btn btn-outline-secondary dropdown-toggle"
+                type="button"
+                data-bs-toggle="dropdown">
+            <i class="bi bi-sort-down"></i> Сортування
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end shadow">
+            <li>
+                <a class="dropdown-item" href="?sort=name">
+                    <i class="bi bi-sort-alpha-down"></i> Назва (А–Я)
+                </a>
+            </li>
+            <li>
+                <a class="dropdown-item" href="?sort=-name">
+                    <i class="bi bi-sort-alpha-up"></i> Назва (Я–А)
+                </a>
+            </li>
+            <li>
+                <a class="dropdown-item" href="?sort=price">
+                    <i class="bi bi-currency-dollar"></i> Ціна ↑
+                </a>
+            </li>
+            <li>
+                <a class="dropdown-item" href="?sort=-price">
+                    <i class="bi bi-currency-dollar"></i> Ціна ↓
+                </a>
+            </li>
         </ul>
     </div>
 </div>
 
 {% if not products %}
-    <div class="alert alert-info"> Товари в цій категорії відсутні</div>
+    <div class="alert alert-info text-center py-4">
+        <i class="bi bi-info-circle"></i>
+        Товари в цій категорії відсутні
+    </div>
 {% else %}
-<div class="row">
-    {% for product in products %}
-     <div class="col-md-4 mb-4">
-         <div class="card h-100">
-             <a href="{{ product.get_absolute_url }}">
-                 <img class="card-img-top" src="{{ product.image.url }}" alt="Зображення {{ product.name }}">
-             </a>
-             <div class="card-body d-flex flex-column">
-                 <h5 class="card-title">
-                     <a href="{{ product.get_absolute_url }}" class="text-decoration-none">{{ product.name }}</a>
-                 </h5>
-                 <p class="card-text mt-auto">{{ product.price }} $</p>
-                 <a href="{{ product.get_absolute_url }}" class="btn btn-outline-primary mt-2"> Детальніше </a>
 
-             </div>
-         </div>
-     </div>
+<!-- PRODUCTS -->
+<div class="row g-4">
+    {% for product in products %}
+        <div class="col-xl-3 col-lg-4 col-md-6">
+            <div class="card h-100 border-0 shadow-sm product-card">
+
+                <a href="{{ product.get_absolute_url }}" class="overflow-hidden">
+                    <img src="{{ product.image.url }}"
+                         class="card-img-top"
+                         alt="{{ product.name }}"
+                         style="height: 220px; object-fit: cover;">
+                </a>
+
+                <div class="card-body d-flex flex-column">
+                    <h6 class="card-title mb-2">
+                        <a href="{{ product.get_absolute_url }}"
+                           class="text-decoration-none text-dark">
+                            {{ product.name }}
+                        </a>
+                    </h6>
+
+                    <div class="mt-auto">
+                        <p class="fw-bold fs-5 mb-2 text-primary">
+                            {{ product.price }} $
+                        </p>
+
+                        <a href="{{ product.get_absolute_url }}"
+                           class="btn btn-outline-primary w-100">
+                            Детальніше
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
     {% endfor %}
 </div>
+
 {% endif %}
 
+<style>
+    .product-card {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .product-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 0.75rem 1.5rem rgba(0,0,0,.1);
+    }
+</style>
 
 {% endblock content %}

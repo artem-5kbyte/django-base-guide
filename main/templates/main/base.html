@@ -1,84 +1,124 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="uk">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{% block title%} {% endblock title %}</title>
+    <title>{% block title %}{% endblock title %}</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .navbar-brand {
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        footer a:hover {
+            color: #adb5bd !important;
+        }
+    </style>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top shadow-sm">
     <div class="container">
-        <a class="navbar-brand" href="{% url 'main:product_list' %}">Всі товари</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <a class="navbar-brand d-flex align-items-center gap-2"
+           href="{% url 'main:product_list' %}">
+            <i class="bi bi-shop"></i>
+            Shop
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
+
         <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav me-auto">
+            <!-- Categories -->
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'main:product_list' %}">Products</a>
+                    <a class="nav-link" href="{% url 'main:product_list' %}">
+                        <i class="bi bi-grid"></i> Всі товари
+                    </a>
                 </li>
+
                 {% for category in categories %}
                     <li class="nav-item">
-                        <a class="nav-link"  href="{{ category.get_absolute_url }}">
+                        <a class="nav-link" href="{{ category.get_absolute_url }}">
                             {{ category.name }}
                         </a>
                     </li>
                 {% endfor %}
             </ul>
-        </div>
 
-        <div class="d-flex">
-            <a href="{% url 'cart:cart_detail' %}" class="btn btn-outline-light position-relative me-3">
-                <i class="bi bi-cart3"> Кошик
-                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+            <!-- Cart -->
+            <a href="{% url 'cart:cart_detail' %}"
+               class="btn btn-outline-light position-relative">
+                <i class="bi bi-cart3"></i>
+                Кошик
+
+                <span class="position-absolute top-0 start-100 translate-middle
+                             badge rounded-pill bg-danger">
                     {% with total_items=cart|length %}
-                        {% if total_items > 0 %}
-                            {{ total_items }}
-                        {% else %}
-                            0
-                        {% endif %}
+                        {{ total_items|default:"0" }}
                     {% endwith %}
                 </span>
-                </i>
             </a>
-
-
         </div>
-
     </div>
-
 </nav>
 
-
-<div class="container mt-4 mb-5">
-    {% block content%}
+<!-- CONTENT -->
+<main class="container my-4">
+    {% block content %}
     {% endblock content %}
-</div>
+</main>
 
-<footer class="bg-dark text-white py-4 mt-5">
+<!-- FOOTER -->
+<footer class="bg-dark text-white mt-auto pt-4 pb-3">
     <div class="container">
-        <div class="row">
+        <div class="row gy-3">
+
             <div class="col-md-4">
-                <h5>Shop</h5>
-                <p>Навчальний проект</p>
+                <h6 class="text-uppercase fw-bold">Shop</h6>
+                <p class="text-muted small mb-0">
+                    Навчальний Django проєкт
+                </p>
             </div>
+
             <div class="col-md-4">
-                <h5>Контакти</h5>
-                <p>Email: artem@admin.com</p>
+                <h6 class="text-uppercase fw-bold">Контакти</h6>
+                <p class="small mb-0">
+                    <i class="bi bi-envelope"></i> artem@admin.com
+                </p>
             </div>
+
             <div class="col-md-4">
-                <h5>Соцмережі</h5>
-                <a href="#" class="text-white me-2"><i class="bi bi-telegram"></i></a>
-                <a href="#" class="text-white me-2"><i class="bi bi-youtube"></i></a>
+                <h6 class="text-uppercase fw-bold">Соцмережі</h6>
+                <a href="#" class="text-white fs-5 me-3">
+                    <i class="bi bi-telegram"></i>
+                </a>
+                <a href="#" class="text-white fs-5">
+                    <i class="bi bi-youtube"></i>
+                </a>
             </div>
+
         </div>
 
+        <hr class="border-secondary my-3">
+
+        <p class="text-center text-muted small mb-0">
+            © {{ now|date:"Y" }} Shop. All rights reserved.
+        </p>
     </div>
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
